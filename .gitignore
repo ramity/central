@@ -1,0 +1,11 @@
+# Secrets
+.env
+
+# IDE
+.idea
+
+# Hide database volume
+data/mariadb/*
+
+# Git related
+!.gitkeep

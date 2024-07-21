@@ -1,0 +1,47 @@
+services:
+
+  central_symfony:
+    build:
+      context: ./
+      dockerfile: docker/symfony/Dockerfile
+    container_name: central_symfony
+    image: central_symfony
+    ports:
+      - 8000:8000
+    volumes:
+      - ./src/symfony:/root/central
+    env_file:
+      - docker/symfony/.env
+    depends_on:
+      - central_mariadb
+
+  central_angular:
+    build:
+      context: ./
+      dockerfile: docker/angular/Dockerfile
+    container_name: central_angular
+    image: central_angular
+    ports:
+      - 4200:4200
+      - 49153:49153
+    volumes:
+      - ./src/angular:/root/central
+    depends_on:
+      - central_symfony
+
+  central_mariadb:
+    build:
+      context: ./
+      dockerfile: docker/mariadb/Dockerfile
+    container_name: central_mariadb
+    image: central_mariadb
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    env_file:
+      - docker/mariadb/.env
+
+networks:
+  default:
+    name: central_network
